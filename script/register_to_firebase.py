@@ -2,11 +2,12 @@ import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
 import click
+import os
 
 from scrape import get_question_list
 
 # Application Default credentials are automatically created.
-cred = credentials.Certificate("content/today-s-kanji-firebase-adminsdk-h6k6o-cf889a72ad.json")
+cred = credentials.Certificate(f"content/{os.environ['FIREBASE_ADMIN_SDK_PATH']}.json")
 app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 

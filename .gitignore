@@ -45,3 +45,6 @@ app.*.map.json
 
 # Firebase related
 /content/
+
+# python related
+/script/__pycache__/
