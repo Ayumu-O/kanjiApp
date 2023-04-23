@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       # Flutter のインストール clone がはやい
       - name: Install Flutter
-        run: curl -O https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_2.0.3-stable.zip && unzip flutter_macos_2.0.3-stable.zip
+        run: git clone -b flutter-3.7-candidate.10 --single-branch https://github.com/flutter/flutter.git
 
       # PATH を通す
       - name: Add path
