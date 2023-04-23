@@ -4,13 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:sample/pages/common/header.dart';
+import 'package:sample/pages/common/colors.dart';
 import 'package:sample/models/question.dart';
-
-const colorMain = Color(0xFFee827c);
-const colorTriad1 = Color(0xFF7bafed);
-const colorTriad2 = Color(0xFF7ebd81);
-const colorLetter = Color(0xFF331c1b);
-const colorWhite = Color(0xFFf1f1f1);
+import 'package:sample/pages/top.dart';
 
 class QuestionPage extends StatefulWidget {
   QuestionPage(this.user, this.date);
@@ -45,23 +42,7 @@ class _QuestionPageState extends State<QuestionPage> {
           final int score = model.getCorrectedQuestions();
           return Scaffold(
               // Header
-              appBar: AppBar(
-                title: Row(
-                  children: [
-                    Text(
-                      '今日の漢字',
-                      style:
-                          GoogleFonts.yujiMai(color: colorWhite, fontSize: 32),
-                    ),
-                    // Image(
-                    //     image: NetworkImage(
-                    //         'https://kyounokanji.com/img/kanji_logo3.gif')),
-                    // Text(user.email.toString(),
-                    //     style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-                backgroundColor: colorTriad1,
-              ),
+              appBar: Header(AppBar(), widget.user),
               // Body
               body: ListView.builder(
                   itemCount: questions.length,
@@ -256,17 +237,35 @@ class Footer extends StatelessWidget {
   final String date;
   final List<Question> questions;
 
-  void send_result() {
-    final String doc = 'user/${user.uid}/results/${date}';
-    print(doc);
+  Future<void> sendResult() async {
+    final String doc = 'user/${user.uid}';
+    final datelist = date.split('/');
+    final mistakenNumbers = [];
+    questions.asMap().forEach((key, q) {
+      if (!q.isCorrect) {
+        mistakenNumbers.add(key);
+      }
+    });
+
     final data = {
-      'results': [
-        for (var q in questions) {'isCorrect': q.isCorrect}
-      ]
+      'results': {
+        // year
+        datelist[0]: {
+          // month
+          datelist[1]: {
+            //day
+            datelist[2]:
+                // 正誤結果
+                mistakenNumbers
+          }
+        }
+      }
     };
-    FirebaseFirestore.instance
+    print(data);
+
+    await FirebaseFirestore.instance
         .doc(doc)
-        .set(data)
+        .set(data, SetOptions(merge: true))
         .onError((e, _) => print("Error writing document: $e"));
     print('Success writing document: ${doc}');
   }
@@ -327,7 +326,11 @@ class Footer extends StatelessWidget {
                         fontFamily: 'Verdana'),
                   ),
                 ]),
-                onPressed: send_result,
+                onPressed: () {
+                  sendResult();
+                  // Navigator.pushReplacement(context,
+                  //     MaterialPageRoute(builder: ((context) => TopPage(user))));
+                },
               ),
             ],
           ),

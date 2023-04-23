@@ -35,7 +35,7 @@ class QuestionModel extends ChangeNotifier {
     // toList(): Map()から返ってきたIterable→Listに変換する
     // TODO: is_correct の初期化
     List<Question> questions =
-        snap.get('questions').map<Question>((q) => Question(q)).toList();
+        await snap.get('questions').map<Question>((q) => Question(q)).toList();
     this.questions = questions;
     notifyListeners();
   }

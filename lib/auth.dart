@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:sample/pages/questions.dart';
+import 'package:sample/pages/top.dart';
 
 // ログイン画面用Widget
 class LoginPage extends StatefulWidget {
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                       // トップ画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) {
-                          return QuestionPage(result.user!, '2023/04/16');
+                          return TopPage(result.user!);
                         }),
                       );
                     } catch (e) {
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       // トップ画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) {
-                          return QuestionPage(user, '2023/04/16');
+                          return TopPage(user);
                         }),
                       );
                     } catch (e) {
