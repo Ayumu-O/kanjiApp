@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/pages/common/header.dart';
 import 'package:sample/pages/common/colors.dart';
 import 'package:sample/pages/mistaken_questions.dart';
+import 'package:sample/pages/test.dart';
 import 'package:sample/pages/questions.dart';
 
 class TopPage extends StatelessWidget {
@@ -45,7 +46,18 @@ class TopPage extends StatelessWidget {
                           builder: (context) => MistakenPage(user)));
                 },
               ),
-            )
+            ),
+            SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                child: Text('テスト'),
+                style: ElevatedButton.styleFrom(backgroundColor: colorTriad2),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => TestPage(user)));
+                },
+              ),
+            ),
           ]),
         ));
   }
