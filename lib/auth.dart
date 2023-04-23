@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                       // トップ画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) {
-                          return QuestionPage(result.user!);
+                          return QuestionPage(result.user!, '2023/04/16');
                         }),
                       );
                     } catch (e) {
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       // トップ画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) {
-                          return QuestionPage(user);
+                          return QuestionPage(user, '2023/04/16');
                         }),
                       );
                     } catch (e) {

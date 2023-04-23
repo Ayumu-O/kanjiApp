@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,8 +13,9 @@ const colorLetter = Color(0xFF331c1b);
 const colorWhite = Color(0xFFf1f1f1);
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage(this.user);
+  QuestionPage(this.user, this.date);
   final User user;
+  final String date;
 
   @override
   State<QuestionPage> createState() => _QuestionPageState();
@@ -25,10 +27,10 @@ class _QuestionPageState extends State<QuestionPage> {
   @override
   Widget build(BuildContext buildContext) {
     return ChangeNotifierProvider<QuestionModel>(
-        create: (_) => QuestionModel()..fetchQuestions('2023/04/16'),
+        create: (_) => QuestionModel()..fetchQuestions(widget.date),
         child:
             Consumer<QuestionModel>(builder: (consumerContext, model, child) {
-          final questions = model.questions;
+          final List<Question> questions = model.questions;
           final List<bool> isVisibles = List.filled(questions.length, false);
           void toggleIsVisibleAll() {
             setState(() {
@@ -75,7 +77,8 @@ class _QuestionPageState extends State<QuestionPage> {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: ScoreBoard(score: score),
-              bottomNavigationBar: Footer(isVisibleAll, toggleIsVisibleAll));
+              bottomNavigationBar: Footer(isVisibleAll, toggleIsVisibleAll,
+                  widget.user, widget.date, questions));
         }));
   }
 }
@@ -245,9 +248,28 @@ class ScoreBoard extends StatelessWidget {
 }
 
 class Footer extends StatelessWidget {
-  Footer(this.isVisibleAll, this.onPressedIsVisibleAll);
+  Footer(this.isVisibleAll, this.onPressedIsVisibleAll, this.user, this.date,
+      this.questions);
   final bool isVisibleAll;
   final Function() onPressedIsVisibleAll;
+  final User user;
+  final String date;
+  final List<Question> questions;
+
+  void send_result() {
+    final String doc = 'user/${user.uid}/results/${date}';
+    print(doc);
+    final data = {
+      'results': [
+        for (var q in questions) {'isCorrect': q.isCorrect}
+      ]
+    };
+    FirebaseFirestore.instance
+        .doc(doc)
+        .set(data)
+        .onError((e, _) => print("Error writing document: $e"));
+    print('Success writing document: ${doc}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,6 +311,13 @@ class Footer extends StatelessWidget {
               ),
               TextButton(
                 child: Row(children: [
+                  Icon(
+                    Icons.send,
+                    color: colorWhite,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
                     '登録',
                     style: TextStyle(
@@ -298,16 +327,10 @@ class Footer extends StatelessWidget {
                         fontFamily: 'Verdana'),
                   ),
                 ]),
-                onPressed: () {},
+                onPressed: send_result,
               ),
             ],
           ),
-          // BottomNavigationBar(items: [
-          //   BottomNavigationBarItem(
-          //       icon: Icon(Icons.home),
-          //       label: model.getCorrectedQuestions().toString()),
-          //   BottomNavigationBarItem(icon: Icon(Icons.search), label: 'test')
-          // ]
         ));
   }
 }
