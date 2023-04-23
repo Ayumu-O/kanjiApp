@@ -13,6 +13,7 @@ import 'package:sample/pages/questions.dart';
 class TopPage extends StatelessWidget {
   const TopPage(this.user);
   final user;
+  final isDevelop = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +48,20 @@ class TopPage extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                child: Text('(開発者テスト)'),
-                style: ElevatedButton.styleFrom(backgroundColor: colorTriad2),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TestPage(user)));
-                },
+            if (isDevelop)
+              SizedBox(
+                width: 150,
+                child: ElevatedButton(
+                  child: Text('(開発者テスト)'),
+                  style: ElevatedButton.styleFrom(backgroundColor: colorTriad2),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TestPage(user)));
+                  },
+                ),
               ),
-            ),
           ]),
         ));
   }
