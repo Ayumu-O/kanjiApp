@@ -17,7 +17,7 @@ class TopPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String date = DateFormat('yyyy/MM/dd').format(DateTime.now());
-    date = '2023/04/18';
+    // date = '2023/04/18'; // テスト用
     return Scaffold(
         appBar: Header(AppBar(), user),
         body: Center(
@@ -50,7 +50,7 @@ class TopPage extends StatelessWidget {
             SizedBox(
               width: 150,
               child: ElevatedButton(
-                child: Text('テスト'),
+                child: Text('(開発者テスト)'),
                 style: ElevatedButton.styleFrom(backgroundColor: colorTriad2),
                 onPressed: () {
                   Navigator.push(context,

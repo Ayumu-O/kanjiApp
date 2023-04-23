@@ -40,6 +40,10 @@ class QuestionModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void fromList(List<Question> questions) {
+    this.questions = questions;
+  }
+
   // 正解している問題数の取得
   int getCorrectedQuestions() {
     return this.questions.where((q) => q.isCorrect).length;

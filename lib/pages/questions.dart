@@ -71,10 +71,12 @@ class QuestionCard extends StatefulWidget {
     required this.index,
     required this.q,
     required this.model,
+    this.isTest = true,
   }) : super(key: key);
   final int index;
   final Question q;
   final QuestionModel model;
+  final bool isTest;
 
   @override
   State<QuestionCard> createState() => _QuestionState();
@@ -99,19 +101,20 @@ class _QuestionState extends State<QuestionCard> {
           )),
           child: Row(children: [
             // 問題番号
-            Container(
-              width: 28,
-              child: Text(
-                '(' + widget.index.toString() + ')',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: colorLetter),
+            if (widget.isTest)
+              Container(
+                width: 28,
+                child: Text(
+                  '(' + widget.index.toString() + ')',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: colorLetter),
+                ),
               ),
-            ),
-            SizedBox(width: 8),
+            if (widget.isTest) const SizedBox(width: 8),
             // 問題文
             Flexible(
               child: Container(
-                width: 200,
+                width: 400,
                 child: RichText(
                     text: TextSpan(
                   style: TextStyle(color: colorLetter, fontFamily: 'Verdana'),
@@ -155,26 +158,28 @@ class _QuestionState extends State<QuestionCard> {
                 ),
               ),
             ),
-            SizedBox(width: 12),
+            if (widget.isTest) SizedBox(width: 12),
             // 正答ボタン
-            Container(
-                child: SizedBox(
-              width: 48,
-              child: ElevatedButton(
-                child: Icon(
-                  Icons.circle_outlined,
-                  color: colorWhite,
+            if (widget.isTest)
+              Container(
+                  child: SizedBox(
+                width: 48,
+                child: ElevatedButton(
+                  child: Icon(
+                    Icons.circle_outlined,
+                    color: colorWhite,
+                  ),
+                  onPressed: () {
+                    widget.q.isCorrect = !widget.q.isCorrect;
+                    widget.model.notifyListeners();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        widget.q.isCorrect ? colorMain : Colors.grey,
+                    padding: EdgeInsets.all(0),
+                  ),
                 ),
-                onPressed: () {
-                  widget.q.isCorrect = !widget.q.isCorrect;
-                  widget.model.notifyListeners();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: widget.q.isCorrect ? colorMain : Colors.grey,
-                  padding: EdgeInsets.all(0),
-                ),
-              ),
-            )),
+              )),
           ]),
         ),
       ),
